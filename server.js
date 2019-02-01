@@ -1,5 +1,6 @@
 const express = require('express');
 const handlebars = require('express-handlebars').create({ defaultLayout: 'main'});
+const fortune = require('./lib/fortune.js');
 
 var app = express();
 
@@ -10,12 +11,6 @@ app.set('view engine', 'handlebars');
 app.set('port', process.env.PORT || 3000);
 app.use(express.static(__dirname + '/public'));
 
-var fortunes = [
-	'Рекам нужны истоки.',
-	'Не бойся неведомого.',
-	'Будь проще везде где это возможно'
-]
-
 // 1. get method, for pages,
 // must be earlier ,than use method
 // 2. handlebars used for render
@@ -24,8 +19,7 @@ app.get('/', function(req, res){
 });
 
 app.get('/about', function(req, res){
-		var randomFortune = fortunes[Math.floor(Math.random() * fortunes.length)];
-		res.render('about', { fortune: randomFortune });
+		res.render('about', { fortune: fortune.getFortune() });
 });
 
 app.use(function(req, res) {
