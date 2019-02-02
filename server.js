@@ -11,6 +11,12 @@ app.set('view engine', 'handlebars');
 app.set('port', process.env.PORT || 3000);
 app.use(express.static(__dirname + '/public'));
 
+app.use(function(req, res, next) {
+	res.locals.showTests = app.get('env') !== 'production' &&
+		req.query.test === '1';
+	next();
+})
+
 // 1. get method, for pages,
 // must be earlier ,than use method
 // 2. handlebars used for render
@@ -19,7 +25,10 @@ app.get('/', function(req, res){
 });
 
 app.get('/about', function(req, res){
-		res.render('about', { fortune: fortune.getFortune() });
+		res.render('about', { 
+			fortune: fortune.getFortune(),
+			pageTestSrcipt: './qa/tests-about.js' 
+		});
 });
 
 app.use(function(req, res) {
